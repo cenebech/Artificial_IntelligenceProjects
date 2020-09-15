@@ -1,0 +1,43 @@
+import cv2
+
+# Enter the paths for your image and cascade files here
+imagePath = r'C:\Users\Ramses\Desktop\03-30-2020\tutorial\Pictures\5cats.jpg' #keep the "r" in front of your path!
+cascPath = r'C:\Users\Ramses\Desktop\haarcascade_frontalcatface.xml'
+
+# Create the haar cascade
+# the cascade is just an XML file that contains the data to detect faces. OpenCV comes with many of these for
+# cat faces, human faces, car plates, human shapes, eyes, smiles,...
+faceCascade = cv2.CascadeClassifier(cascPath)
+
+# Read the image that we want to analyze
+image = cv2.imread(imagePath)
+cv2.imshow('Original image',image) # display original image in a new windows
+cv2.waitKey(0) # waits until you press a key (any key)
+cv2.destroyAllWindows() # closes the image that was opened as a new window
+
+#Transform the image to Grayscale
+gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) # transforms the color image into grayscale to improve pattern recognition
+cv2.imshow('Gray image', gray) # display the grayscale image in a new windows
+cv2.waitKey(0) # waits until you press a key (any key)
+cv2.destroyAllWindows() # closes the gray image that was opened as a new window
+
+# Detect cat's faces in the image
+faces = faceCascade.detectMultiScale( # faces is a list of vectors containing the coordinates of the rectangles that encapsulate the faces found in the image
+    gray,
+    scaleFactor=1.1001, #1.25
+    minNeighbors=5, #5
+    minSize=(20, 20), #30, 30
+    flags = cv2.CASCADE_SCALE_IMAGE
+)
+
+#Print the number of cat faces found
+print('Cats found: ', len(faces))
+
+# Draw a rectangle around the faces
+for (x, y, w, h) in faces:
+    cv2.rectangle(image, (x, y), (x+w, y+h), (0, 255, 0), 2)
+    
+#Display the cat faces found on the image
+cv2.imshow("Faces found", image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
